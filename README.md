@@ -10,7 +10,7 @@ This assumes you have [Node-RED](https://nodered.org) already installed and work
 
 **NOTE:** This requires [Node.js](https://nodejs.org) v8.11.1+
 
-Feel free to donate to keep this project going!
+Feel free to donate to keep this project going!<br/>
 https://www.paypal.com/donate/?business=6X6AADL3TVMZL&no_recurring=0&currency_code=ILS
 
 Install via Node-RED Manage Palette
