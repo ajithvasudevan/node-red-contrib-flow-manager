@@ -341,13 +341,27 @@ const onDemandFlowsManager = {
     }
 }
 
-async function readActiveProject() {
+async function readProject() {
     try {
-        const redConfig = await fs.readJson(path.join(RED.settings.userDir, '.config.json'));
-        return redConfig.projects.activeProject;
-    } catch (e) {
-        return null;
-    }
+
+        // newer nodered versions
+        const newCfgPath = path.join(RED.settings.userDir, '.config.projects.json');
+        const newCfgPath_exists = fs.existsSync(newCfgPath);
+        if(newCfgPath_exists) {
+            const redConfig = await fs.readJson(newCfgPath);
+            return {path: newCfgPath, activeProject: redConfig.activeProject};
+        }
+
+        // older nodered versions
+        const oldCfgPath = path.join(RED.settings.userDir, '.config.json');
+        const oldCfgPath_exists = fs.existsSync(oldCfgPath);
+        if(oldCfgPath_exists) {
+            const redConfig = await fs.readJson(oldCfgPath);
+            return {path: oldCfgPath, activeProject: redConfig.projects.activeProject};
+        }
+
+    } catch (e) {}
+    return null;
 }
 
 const revisions = {
@@ -402,9 +416,10 @@ async function main() {
     async function refreshDirectories() {
         let basePath, project = null;
         if(RED.settings.editorTheme.projects.enabled) {
-            project = await readActiveProject();
+            projectObj = await readProject();
 
-            if(project) {
+            if(projectObj?.activeProject) {
+                project = projectObj.activeProject;
                 const activeProjectPath = path.join(RED.settings.userDir, 'projects', project);
                 basePath = activeProjectPath;
             } else {
@@ -773,11 +788,13 @@ async function main() {
 
     await startFlowManager();
     if(RED.settings.editorTheme.projects.enabled) {
-        let lastProject = await readActiveProject();
-        fs.watch(path.join(RED.settings.userDir, '.config.json'), debounce(async () => {
-            const newProject = await readActiveProject();
-            if(lastProject != newProject) {
-                lastProject = newProject;
+        let projFile = await readProject();
+        if(!projFile) return; // no cfg file, do nothing.
+        fs.watch(projFile.path, debounce(async () => {
+            const newProjFile = await readProject();
+            if(!projFile) return; // no cfg, do nothing
+            if(projFile?.activeProject != newProjFile?.activeProject) {
+                projFile = newProjFile;
                 await startFlowManager();
             }
         }, 500));
