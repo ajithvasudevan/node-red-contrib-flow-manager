@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/monogoto.io/node-red-contrib-flow-manager.git"
+    "url": "git+https://github.com/ajithvasudevan/node-red-contrib-flow-manager.git"
   },
   "keywords": [
     "node-red",
