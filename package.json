@@ -10,13 +10,13 @@
     "start": "build "
   },
   "dependencies": {
-    "axios": "*",
-    "body-parser": "*",
-    "eol": "*",
-    "fs-extra": "*",
-    "js-yaml": "*",
-    "jsonata": "*",
-    "log4js": "*"
+    "axios": "0.21.2",
+    "body-parser": "1.20.0",
+    "eol": "0.9.1*",
+    "fs-extra": "9.1.0",
+    "js-yaml": "3.14.1",
+    "jsonata": "1.8.6",
+    "log4js": "6.4.0"
   },
   "repository": {
     "type": "git",
